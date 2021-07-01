@@ -1,10 +1,10 @@
 package com.Nephty.graphics;
 
+import com.Nephty.body.FileGetter;
+import com.Nephty.body.FileMatcher;
 import com.Nephty.graphics.properties.ImageProperties;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import com.Nephty.body.FileGetter;
-import com.Nephty.main;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,22 +20,25 @@ public class Image
 
     private javafx.scene.image.Image image;
     public ImageProperties properties;
+    private String imageKey;
+    private String fileName;
 
     /**
      * Create a new <code>Image</code> that can be interacted with. The buttons has an image that can be of any size to
      * make it fully customizable.
-     * @param x The X position of the button in its container
-     * @param y The Y position of the button in its container
-     * @param fileName The name of the image file that will be used to display the button
+     * @param properties <code>ImageProperties</code> to use for the image.
+     * @param key The key to use in the file matcher to get the proper texture
      */
-    public Image(int x, int y, String fileName) {
-        super(x * main.WR, y * main.HR);
-
+    public Image(ImageProperties properties, String key) {
+        super(properties.x, properties.y, properties.width, properties.height);
         try {
+            this.properties = properties;
+            setProperties();
+            imageKey = key;
+            fileName = FileMatcher.getFileName(imageKey);
             FileInputStream inputStream = new FileInputStream(FileGetter.directory("img") + fileName);
-            this.image = new javafx.scene.image.Image(inputStream);
+            image = new javafx.scene.image.Image(inputStream);
             this.setFill(new ImagePattern(this.image));
-            this.properties = new ImageProperties(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         } catch (FileNotFoundException e) {
             AlertBox.display("Fatal error", "A .png file could not be found. Check if no file is missing.\n" +
                     "Check if the names have not been changed or if any file has not been deleted.\n" +
@@ -44,25 +47,10 @@ public class Image
         }
     }
 
-    /**
-     * Create a new <code>Image</code> that can be interacted with. The buttons has an image that can be of any size to
-     * make it fully customizable.
-     * @param properties <code>ImageProperties</code> to use for the image.
-     * @param fileName The name of the image file that will be used to display the button
-     */
-    public Image(ImageProperties properties, String fileName) {
-        super(properties.x * main.WR, properties.y * main.HR);
-
-        try {
-            FileInputStream inputStream = new FileInputStream(FileGetter.directory("img") + fileName);
-            this.image = new javafx.scene.image.Image(inputStream);
-            this.setFill(new ImagePattern(this.image));
-            this.properties = properties;
-        } catch (FileNotFoundException e) {
-            AlertBox.display("Fatal error", "A .png file could not be found. Check if no file is missing.\n" +
-                    "Check if the names have not been changed or if any file has not been deleted.\n" +
-                    "You can run the FileIntegrity checker for further information.\n Missing file : " + fileName + ".");
-            System.exit(-1);
-        }
+    public void setProperties() {
+        setX(properties.x);
+        setY(properties.y);
+        setWidth(properties.width);
+        setHeight(properties.height);
     }
 }

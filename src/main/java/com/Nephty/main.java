@@ -1,13 +1,16 @@
 package com.Nephty;
 
 import com.Nephty.audio.AudioPlayer;
+import com.Nephty.body.JSONReader;
+import com.Nephty.exceptions.JSONValueException;
+import com.Nephty.graphics.AlertBox;
+import com.Nephty.graphics.ConfirmBox;
+import com.Nephty.graphics.Console;
+import com.Nephty.graphics.menus.TitleScreen;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.awt.*;
-
-import com.Nephty.graphics.*;
-import com.Nephty.body.*;
 
 /**
  * The <code>Main</code> class is the class that will be executed when running the program.
@@ -23,11 +26,11 @@ public class main extends Application {
 
     static final int windowX = 0;
     static final int windowY = 0;
-    static final int windowWidth = 1920;
-    static final int windowHeight = 1080;
+    public static float windowWidth = 0;
+    public static float windowHeight = 0;
 
-    static final int ORIGINAL_WIDTH = 1920;
-    static final int ORIGINAL_HEIGHT = 1080;
+    public static final int ORIGINAL_WIDTH = 2560;
+    public static final int ORIGINAL_HEIGHT = 1440;
     public static float WR, HR;
     static byte RESOLUTION_ID;
 
@@ -44,16 +47,12 @@ public class main extends Application {
 
             prepareResolution(window);
 
-            /*
-            Pane mainMenuPanel = new Pane();
-
-            Image background = new Image(windowX, windowY, WR, HR, "background.png");
-            MainMenu mainMenu = new MainMenu(mainMenuPanel, windowWidth, windowHeight, WR, HR, window, background);
+            TitleScreen titleScreen = new TitleScreen();
 
             Console.prepare();
 
-            window.setScene(mainMenu);
-             */
+            window.setScene(titleScreen);
+
             window.show();
 
         } catch (Exception e2) {
@@ -109,7 +108,7 @@ public class main extends Application {
      *
      * @param window The window that will be prepared
      */
-    public static void prepareResolution(Stage window) {
+    public static void prepareResolution(Stage window) throws JSONValueException {
         // Available resolutions :
         // 0 : native resolution
         // 1 : 1280x720     HD
@@ -120,8 +119,8 @@ public class main extends Application {
 
         Dimension dimension;
 
-        byte resolutionID = getResolutionID();
-        switch (resolutionID) {
+        RESOLUTION_ID = getResolutionID();
+        switch (RESOLUTION_ID) {
             case 0:
                 dimension = getScreenDimension();
                 fullscreen = true;
@@ -145,20 +144,22 @@ public class main extends Application {
                 dimension = new Dimension(640, 360);
                 break;
             default:
-                throw new IllegalStateException("Unexpected value: " + resolutionID);
+                throw new JSONValueException("Unexpected value was found in the data.json file" +
+                        " with key \"resolution\" : " + RESOLUTION_ID);
         }
-
 
         WR = getWidthRatio(dimension.width);
         HR = getHeightRatio(dimension.height);
 
-        window.setWidth(windowWidth * WR);
-        window.setHeight(windowHeight * HR);
+        windowWidth = dimension.width;
+        windowHeight = dimension.height;
+        window.setWidth(windowWidth);
+        window.setHeight(windowHeight);
         window.setX(windowX);
         window.setY(windowY);
-        window.setResizable(false);
+        //window.setResizable(false);
         window.setFullScreen(fullscreen);
-        window.setTitle("GOOOOOEY");
+        window.setTitle("Star Defender");
         window.setFullScreenExitHint("");
     }
 

@@ -1,5 +1,11 @@
 package com.Nephty.graphics;
 
+import com.Nephty.graphics.properties.ImageProperties;
+import javafx.scene.Node;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * A <code>Button</code> is a <code>Image</code> filled with an image found in the
  *  <code>src\main\resources\img</code> directory. We can interact with it but no interface is implemented and
@@ -15,14 +21,13 @@ public class Button extends Image {
     /**
      * Create a new <code>Button</code> that can be interacted with. The buttons has an image that can be of any size to
      * make it fully customizable.
-     * @param x The X position of the button in its container
-     * @param y The Y position of the button in its container
-     * @param fileName The name of the image file that will be used to display the button
+     * @param properties The <code>ImageProperties</code> of the button
+     * @param key The key to use in the file matcher to get the proper texture
      */
-    public Button(int x, int y, String fileName) {
-        super(x, y, fileName);
+    public Button(ImageProperties properties, String key) {
+        super(properties, key);
 
-        this.overlay = new Image(x, y, "button overlay.png");
+        this.overlay = new Image(properties, "buttonoverlay");
         this.overlay.setVisible(false);
 
         this.setOnMouseEntered(e -> this.overlay.setVisible(true));
@@ -32,27 +37,37 @@ public class Button extends Image {
     /**
      * Create a new Button that can be interacted with. The buttons has an image that can be of any size to
      * make it fully customizable.
-     * @param x The X position of the button in its container
-     * @param y The Y position of the button in its container
-     * @param fileName The name of the image file that will be used to display the button
-     * @param small A byte that can be 0 or 1. If it's 0, the constructor creates a small button.
-     *              If it's 1, the constructor creates a slightly larger button, but not a regular one.
+     * @param properties The <code>ImageProperties</code> of the button
+     * @param key The key to use in the file matcher to get the proper texture
+     * @param size A byte that can be 0 or 1. If it's 0, the constructor creates a small button.
+     *              If it's 1, the constructor creates a slightly larger button than the small one.
      */
-    public Button(int x, int y, String fileName, byte small) {
-        super(x, y, fileName);
+    public Button(ImageProperties properties, String key, byte size) {
+        super(properties, key);
 
+        // TODO : change this to file matcher key
         String localFileName = "button overlay.png";
 
-        if (small == 0) {
+        if (size == 0) {
+            // TODO : change this to file matcher key
             localFileName = "small overlay.png";
-        } else if (small == 1) {
+        } else if (size == 1) {
+            // TODO : change this to file matcher key
             localFileName = "small larger overlay.png";
         }
 
-        this.overlay = new Image(x, y, localFileName);
+        this.overlay = new Image(properties, localFileName);
         this.overlay.setVisible(false);
 
         this.setOnMouseEntered(e -> this.overlay.setVisible(true));
         this.overlay.setOnMouseExited(e -> this.overlay.setVisible(false));
+    }
+
+    /**
+     * Easier adding of the image and its overlay to a <code>Pane</code>.
+     * @return The image and its overlay as an <code>ArrayList</code> of <code>Node</code>
+     */
+    public ArrayList<Node> getWithOverlay() {
+        return new ArrayList<>(Arrays.asList(this, this.overlay));
     }
 }
