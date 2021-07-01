@@ -2,11 +2,14 @@ package com.Nephty.graphics.menus;
 
 import com.Nephty.graphics.Button;
 import com.Nephty.graphics.Image;
-import javafx.scene.Parent;
+import com.Nephty.graphics.properties.ImageProperties;
+import com.Nephty.main;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
+import javafx.scene.layout.Pane;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * A <code>Main</code> is a user interface and is the first UI displayed when the game is launched.
@@ -15,27 +18,44 @@ import java.awt.*;
  * button allows the user to play on the freeplay levels. It also contains the "Options" button that opens the options
  * menu and a "Quit" button that closes the game.
  */
+@SuppressWarnings("IntegerDivisionInFloatingPointContext")
 public class TitleScreen
         extends AbstractMenu {
 
-    private Button playButton, optionsButton, quitButton;
-    private Image background;
-    private static Stage window;
+    public final static Pane pane = new Pane();
+
+    private final static float buttonWidth = 600F;
+    private final static float buttonHeight = 120F;
+    private final static float buttonX = (main.ORIGINAL_WIDTH / 2) - (buttonWidth / 2);
+    private final static float buttonY = main.ORIGINAL_HEIGHT / 2 - 200;
+    private final static float buttonSpacing = 140F;
+
+    // 140 pixels of spacing between buttons
+    public final static Button playButton = new Button(
+            new ImageProperties(buttonX, buttonY, buttonWidth, buttonHeight),
+            "titlescreen.buttons.playbutton");
+    public final static Button optionsButton = new Button(
+            new ImageProperties(buttonX, buttonY + buttonSpacing, buttonWidth, buttonHeight),
+            "titlescreen.buttons.optionsbutton");
+    public final static Button achievementsButton = new Button(
+            new ImageProperties(buttonX, buttonY + 2 * buttonSpacing, buttonWidth, buttonHeight),
+            "titlescreen.buttons.achievementsbutton");
+    public final static Button statisticsButton = new Button(
+            new ImageProperties(buttonX, buttonY + 3 * buttonSpacing, buttonWidth, buttonHeight),
+            "titlescreen.buttons.statisticsbutton");
+    public final static Button quitButton = new Button(
+            new ImageProperties(buttonX, buttonY + 4 * buttonSpacing, buttonWidth, buttonHeight),
+            "titlescreen.buttons.quitbutton");
+    public final static Image background = new Image(new ImageProperties(0, 0, main.ORIGINAL_WIDTH, main.ORIGINAL_HEIGHT),
+            "titlescreen.background");
 
     /**
      * Create a new <code>MainMenu</code> object and prepare its attributes
-     * @param parent The main <code>Pane</code> that we will be using to store the content. This pane should (but it's not
-     *                mandatory) be the size of the window in order to be able to display content anywhere on
-     *                the said window.
-     * @param width The width of the menu (preferably the size of the window)
-     * @param height The height of the menu (preferably the size of the window)
-     * @param window_ The window containing everything
-     * @param background The background that will be displayed for the menu
      */
-    public TitleScreen(Parent parent, double width, double height, Stage window_, Image background) {
-        super(parent, width, height, background);
-        window = window_;
-        this.background = background;
+    public TitleScreen() {
+        super(pane, main.windowWidth, main.windowHeight, background);
+
+        setImages();
         setButtons();
         prepareButtonsActions();
     }
@@ -50,19 +70,43 @@ public class TitleScreen
         if (dimension.width == getScreenDimension().width) {
             fullscreen = true;
         }
+    }
 
-        this.playButton = new Button(
-                ((ORIGINAL_WIDTH/2)-(480/2)),
-                ((ORIGINAL_HEIGHT/2)+25-96-25),
-                "play button.png");
-        this.optionsButton = new Button(
-                ((ORIGINAL_WIDTH/2)-(480/2)),
-                ((ORIGINAL_HEIGHT/2)+25),
-                "options button.png");
-        this.quitButton = new Button(
-                ((ORIGINAL_WIDTH/2)-(480/2)),
-                ((ORIGINAL_HEIGHT/2)+25+96+25+96+25),
-                "quit button.png");
+    /**
+     * Prepare the images that will be contained in the title screen pane
+     */
+    private void setImages() {
+        // TODO : this is a working version. The commented code is the issue.
+        TitleScreen.pane.getChildren().add(TitleScreen.background);
+
+        /*
+        Media media = new Media(new File(FileGetter.directory("img").concat("Animated Titlescreen Background.mp4")).toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setAutoPlay(true);
+        MediaView mediaView = new MediaView(mediaPlayer);
+
+        TitleScreen.pane.getChildren().addAll(mediaView);
+         */
+
+        addAllWithOverlay(playButton.getWithOverlay(),
+                optionsButton.getWithOverlay(),
+                achievementsButton.getWithOverlay(),
+                statisticsButton.getWithOverlay(),
+                quitButton.getWithOverlay());
+    }
+
+    /**
+     * For every <code>ArrayList</code> given in argument, add every <code>Node</code> contained in the
+     * pane of the Titlescreen.
+     * @param Element Multiple <code>ArrayList</code> containing the <code>Node</code> to add to the pane
+     */
+    @SafeVarargs
+    private static void addAllWithOverlay(ArrayList<Node>... Element) {
+        for (ArrayList<Node> arrayList : Element) {
+            for (Node element : arrayList) {
+                TitleScreen.pane.getChildren().add(element);
+            }
+        }
     }
 
 
@@ -70,7 +114,7 @@ public class TitleScreen
      * Prepare the <code>EventHandlers</code> for the buttons and their overlays according to their respective function.
      */
     private void prepareButtonsActions() {
-        this.playButton.overlay.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+        playButton.overlay.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             // TODO : fill
         });
     }

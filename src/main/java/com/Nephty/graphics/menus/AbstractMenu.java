@@ -62,8 +62,9 @@ public abstract class AbstractMenu
         this.background = background;
         WIDTH = (int) width;
         HEIGHT = (int) height;
-        this.font = new Font("Microsoft YaHei", 35*WR);
-        this.color = Color.rgb(88, 38, 24);
+
+        // this.font = new Font("Microsoft YaHei", 35*WR);
+        // this.color = Color.rgb(88, 38, 24);
     }
 
     /**
