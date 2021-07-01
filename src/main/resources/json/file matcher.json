@@ -1,0 +1,9 @@
+{
+  "titlescreen.buttons.playbutton": "Play Button.png",
+  "titlescreen.buttons.optionsbutton": "Options Button.png",
+  "titlescreen.buttons.achievementsbutton": "Achievements Button.png",
+  "titlescreen.buttons.statisticsbutton": "Statistics Button.png",
+  "titlescreen.buttons.quitbutton": "Quit Button.png",
+  "titlescreen.background": "Titlescreen Background.png",
+  "buttonoverlay": "Button Overlay.png"
+}
